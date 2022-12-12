@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String ACC_HOLDER_COL = "account_holder";
     private static final String INITIAL_BALANCE_COL = "initial_balance";
 
-    private static final String TABLE_TRANSACTION = "10";
+    private static final String TABLE_TRANSACTION = "transaction_table";
     private static final String TRANSACTION_ACC_COL = "account_no";
     private static final String TRANSACTION_ID_COL = "id";
     private static final String TRANSACTION_DATE_COL = "date";
