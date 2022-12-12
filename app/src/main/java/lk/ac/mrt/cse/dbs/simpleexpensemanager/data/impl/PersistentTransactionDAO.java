@@ -20,7 +20,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
 //    private ExpenseDB expenseDB;
     private DatabaseHelper databaseHelper;
 
-    private static final String TABLE_NAME = "transaction";
+    private static final String TABLE_NAME = "transaction_table";
     private static final String TRANSACTION_ACC_COL = "account_no";
     private static final String TRANSACTION_ID_COL = "id";
     private static final String TRANSACTION_DATE_COL = "date";
@@ -37,7 +37,8 @@ public class PersistentTransactionDAO implements TransactionDAO {
         ContentValues values = new ContentValues();
 
         String sDate = date.toString();
-        String sExpense = expenseType.toString();
+        String sExpense = expenseToString(expenseType);
+//        String sExpense = expenseType.toString();
 
         values.put(TRANSACTION_DATE_COL, sDate);
         values.put(TRANSACTION_ACC_COL, accountNo);
@@ -57,9 +58,17 @@ public class PersistentTransactionDAO implements TransactionDAO {
         }
         return date;
     }
+    private String expenseToString(ExpenseType expenseType){
+        if (expenseType == ExpenseType.EXPENSE){
+            return "EXPENSE";
+        }
+        else{
+            return "INCOME";
+        }
+    }
 
     private ExpenseType toExpenseType(String sExpense){
-        if(sExpense.equals("expense")){
+        if(sExpense.equals("EXPENSE")){
             return ExpenseType.EXPENSE;
         }else{
             return ExpenseType.INCOME;

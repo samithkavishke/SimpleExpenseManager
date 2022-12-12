@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "200296M";
+    private static final String DB_NAME = "200525R";
     private static final int DB_VERSION = 1;
 
     private static final String TABLE_ACCOUNT = "accounts";
@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String ACC_HOLDER_COL = "account_holder";
     private static final String INITIAL_BALANCE_COL = "initial_balance";
 
-    private static final String TABLE_TRANSACTION = "transaction";
+    private static final String TABLE_TRANSACTION = "10";
     private static final String TRANSACTION_ACC_COL = "account_no";
     private static final String TRANSACTION_ID_COL = "id";
     private static final String TRANSACTION_DATE_COL = "date";
@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                       + ACC_HOLDER_COL + " TEXT,"
                       + INITIAL_BALANCE_COL + " REAL);";
 
-        String query2 = "CREATE TABLE " + TABLE_TRANSACTION + "("
+        String query2 = "CREATE TABLE " + TABLE_TRANSACTION + " ("
                         + TRANSACTION_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + TRANSACTION_DATE_COL + " TEXT,"
                         + TRANSACTION_ACC_COL + " TEXT,"

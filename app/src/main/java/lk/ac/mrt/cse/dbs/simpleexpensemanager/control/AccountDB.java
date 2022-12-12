@@ -65,28 +65,16 @@ public class AccountDB extends SQLiteOpenHelper {
     // this method is use to add new course to our sqlite database.
     public void addNewUser(String userAccountNo, String userBank, String userAccountHolder, String userInitialBalance) {
 
-        // on below line we are creating a variable for
-        // our sqlite database and calling writable method
-        // as we are writing data in our database.
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // on below line we are creating a
-        // variable for content values.
         ContentValues values = new ContentValues();
 
-        // on below line we are passing all values
-        // along with its key and value pair.
         values.put(BANK_COL, userBank);
         values.put(ACC_NO_COL, userAccountNo);
         values.put(ACC_HOLDER_COL, userAccountHolder);
         values.put(INITIAL_BALANCE_COL, userInitialBalance);
 
-        // after adding all values we are passing
-        // content values to our table.
         db.insert(TABLE_NAME, null, values);
-
-        // at last we are closing our
-        // database after adding database.
         db.close();
     }
 

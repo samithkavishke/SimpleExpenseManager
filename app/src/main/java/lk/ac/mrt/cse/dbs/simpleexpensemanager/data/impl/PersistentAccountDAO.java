@@ -48,10 +48,10 @@ public class PersistentAccountDAO implements AccountDAO {
         if(cursorAccounts.moveToFirst()) {
             do {
                 accountModalArrayList.add(
-                        new Account(cursorAccounts.getString(1),
+                        new Account(cursorAccounts.getString(0),
+                                cursorAccounts.getString(1),
                                 cursorAccounts.getString(2),
-                                cursorAccounts.getString(3),
-                                Double.parseDouble(cursorAccounts.getString(4))));
+                                cursorAccounts.getDouble(3)));
             } while (cursorAccounts.moveToNext());
         }
         cursorAccounts.close();
@@ -122,11 +122,14 @@ public class PersistentAccountDAO implements AccountDAO {
                 throw new InvalidAccountException(msg);
             }else{
                 new_balance = account.getBalance()-amount;
+                values.put(INITIAL_BALANCE_COL,new_balance);
+                sqLiteDatabase.update(TABLE_NAME,values,ACC_NO_COL+" = ? ",new String[]{accountNo});
             }
         }else{
             new_balance = account.getBalance()+amount;
+            values.put(INITIAL_BALANCE_COL,new_balance);
+            sqLiteDatabase.update(TABLE_NAME,values,ACC_NO_COL+" = ? ",new String[]{accountNo});
         }
-        values.put(INITIAL_BALANCE_COL,new_balance);
-        sqLiteDatabase.update(TABLE_NAME,values,accountNo+" = ? ",new String[]{accountNo});
+
     }
 }
