@@ -23,9 +23,6 @@ public class AccountDB extends SQLiteOpenHelper {
     // below variable is for our table name.
     private static final String TABLE_NAME = "Accounts";
 
-    // below variable is for our id column.
-//    private static final String ID_COL = "id";
-
     private static final String ACC_NO_COL = "Account No.";
 
     private static final String BANK_COL = "Bank";
