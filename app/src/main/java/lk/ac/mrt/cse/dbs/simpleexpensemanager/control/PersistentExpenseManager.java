@@ -1,20 +1,22 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.control;
 
+import android.content.Context;
+
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.Database.DatabaseHelper;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.PersistentAccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.PersistentTransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
-import lk.ac.mrt.cse.dbs.simpleexpensemanager.ui.MainActivity;
 
 public class PersistentExpenseManager extends ExpenseManager {
 
     private TransactionDAO persistentTransactionDAO ;
     private AccountDAO persistentAccountDAO;
-    public PersistentExpenseManager(MainActivity mainActivity) {
+    private DatabaseHelper databaseHelper;
+    public PersistentExpenseManager(Context context) {
         super();
-        persistentTransactionDAO = new PersistentTransactionDAO(mainActivity);
-        persistentAccountDAO = new PersistentAccountDAO(mainActivity);
+        this.databaseHelper = new DatabaseHelper(context);
         setup();
 
     }
@@ -23,6 +25,8 @@ public class PersistentExpenseManager extends ExpenseManager {
     public void setup() {
         /*** Begin generating dummy data for In-Memory implementation ***/
 
+        persistentTransactionDAO = new PersistentTransactionDAO(this.databaseHelper);
+        persistentAccountDAO = new PersistentAccountDAO(this.databaseHelper);
         setTransactionsDAO(persistentTransactionDAO);
         setAccountsDAO(persistentAccountDAO);
 
