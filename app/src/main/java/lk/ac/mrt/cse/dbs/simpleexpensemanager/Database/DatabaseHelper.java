@@ -1,13 +1,14 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.Database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "200525R";
+    private static final String DB_NAME = "200296M";
     private static final int DB_VERSION = 1;
 
     private static final String TABLE_ACCOUNT = "accounts";
@@ -55,10 +56,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTION);
         onCreate(db);
     }
 
-
+    public boolean validateTransaction(String accountNo, double amount){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM "+TABLE_ACCOUNT+" WHERE "+ACC_NO_COL+" = ?",new String[]{accountNo});
+        cursor.moveToFirst();
+        double balance = cursor.getDouble(3);
+        if (balance>=amount){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

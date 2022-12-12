@@ -124,11 +124,13 @@ public class PersistentAccountDAO implements AccountDAO {
                 new_balance = account.getBalance()-amount;
                 values.put(INITIAL_BALANCE_COL,new_balance);
                 sqLiteDatabase.update(TABLE_NAME,values,ACC_NO_COL+" = ? ",new String[]{accountNo});
+                sqLiteDatabase.close();
             }
         }else{
             new_balance = account.getBalance()+amount;
             values.put(INITIAL_BALANCE_COL,new_balance);
             sqLiteDatabase.update(TABLE_NAME,values,ACC_NO_COL+" = ? ",new String[]{accountNo});
+            sqLiteDatabase.close();
         }
 
     }

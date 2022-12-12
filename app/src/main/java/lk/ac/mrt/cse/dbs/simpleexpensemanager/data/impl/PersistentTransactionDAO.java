@@ -33,19 +33,22 @@ public class PersistentTransactionDAO implements TransactionDAO {
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
-        SQLiteDatabase sqLiteDatabase = this.databaseHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
 
-        String sDate = date.toString();
-        String sExpense = expenseToString(expenseType);
+        if(this.databaseHelper.validateTransaction(accountNo,amount) || expenseType.equals(ExpenseType.INCOME)) {
+            SQLiteDatabase sqLiteDatabase = this.databaseHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            String sDate = date.toString();
+            String sExpense = expenseToString(expenseType);
 //        String sExpense = expenseType.toString();
 
-        values.put(TRANSACTION_DATE_COL, sDate);
-        values.put(TRANSACTION_ACC_COL, accountNo);
-        values.put(TRANSACTION_TYPE_COL, sExpense);
-        values.put(TRANSACTION_AMOUNT_COL, amount);
+            values.put(TRANSACTION_DATE_COL, sDate);
+            values.put(TRANSACTION_ACC_COL, accountNo);
+            values.put(TRANSACTION_TYPE_COL, sExpense);
+            values.put(TRANSACTION_AMOUNT_COL, amount);
 
-        sqLiteDatabase.insert(TABLE_NAME,null,values);
+            sqLiteDatabase.insert(TABLE_NAME, null, values);
+        }
     }
 
     private Date toDate(String sDate){
@@ -59,7 +62,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
         return date;
     }
     private String expenseToString(ExpenseType expenseType){
-        if (expenseType == ExpenseType.EXPENSE){
+        if (expenseType.equals(ExpenseType.EXPENSE)){
             return "EXPENSE";
         }
         else{
@@ -87,7 +90,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
 
                 Date transactionDate = toDate(cursorTransactions.getString(1));
                 String transactionAccountNo = cursorTransactions.getString(2);
-                ExpenseType transactionExpenseType = toExpenseType(cursorTransactions.getString(4));
+                ExpenseType transactionExpenseType = toExpenseType(cursorTransactions.getString(3));
                 double transactionBalance = cursorTransactions.getDouble(4);
 
                 // on below line we are adding the data from cursor to our array list.
