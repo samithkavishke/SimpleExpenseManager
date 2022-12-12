@@ -29,11 +29,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
 
     public PersistentTransactionDAO(DatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper ;
-//        expenseDB = new ExpenseDB(context);
-//        transactions = expenseDB.readTransaction();
     }
-
-
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
@@ -47,15 +43,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
         values.put(TRANSACTION_ACC_COL, accountNo);
         values.put(TRANSACTION_TYPE_COL, sExpense);
         values.put(TRANSACTION_AMOUNT_COL, amount);
-//        Transaction transaction = new Transaction(date,accountNo,expenseType,amount);
-//        transactions.add(transaction);
-//        String string_year = String.valueOf(date.getYear());
-//        String string_month = String.valueOf(date.getMonth());
-//        String string_day = String.valueOf(date.getDate());
-//
-//        String string_date = string_year+"-"+string_month+"-"+string_day;
-//
-//        expenseDB.addNewTransaction(string_date,accountNo, String.valueOf(expenseType),String.valueOf(amount));
+
         sqLiteDatabase.insert(TABLE_NAME,null,values);
     }
 
@@ -71,42 +59,45 @@ public class PersistentTransactionDAO implements TransactionDAO {
     }
 
     private ExpenseType toExpenseType(String sExpense){
-        return new ExpenseType();
+        if(sExpense.equals("expense")){
+            return ExpenseType.EXPENSE;
+        }else{
+            return ExpenseType.INCOME;
+        }
     }
 
     @Override
     public List<Transaction> getAllTransactionLogs() {
         SQLiteDatabase sqLiteDatabase = this.databaseHelper.getReadableDatabase();
 
-        // on below line we are creating a cursor with query to read data from database.
         Cursor cursorTransactions = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
-        // on below line we are creating a new array list.
-        ArrayList<Transaction> transactionModalArrayList = new ArrayList<>();
-
-        // moving our cursor to first position.
         if (cursorTransactions.moveToFirst()) {
             do {
 
                 Date transactionDate = toDate(cursorTransactions.getString(1));
+                String transactionAccountNo = cursorTransactions.getString(2);
+                ExpenseType transactionExpenseType = toExpenseType(cursorTransactions.getString(4));
+                double transactionBalance = cursorTransactions.getDouble(4);
 
                 // on below line we are adding the data from cursor to our array list.
-                transactionModalArrayList.add(new Transaction(transactionDate,
-                        cursorTransactions.getString(4),
-                        cursorTransactions.getString(2),
-                        (double)Integer.parseInt(cursorTransactions.getString(3))));
+                transactions.add(new Transaction(transactionDate,
+                        transactionAccountNo,
+                        transactionExpenseType,
+                        transactionBalance
+                        ));
             } while (cursorTransactions.moveToNext());
-            // moving our cursor to next.
         }
-        // at last closing our cursor
-        // and returning our array list.
         cursorTransactions.close();
 
         return transactions;
     }
 
+
     @Override
     public List<Transaction> getPaginatedTransactionLogs(int limit) {
+        List<Transaction> transactions = getAllTransactionLogs();
         int size = transactions.size();
         if (size <= limit ){
             return transactions;
